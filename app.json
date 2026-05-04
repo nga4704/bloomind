@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Bloomind-heathcare",
+    "slug": "Bloomind-heathcare",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.bloomind.healthcare",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.bloomind.healthcare",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "style": {
+        "caretColor": "transparent"
+      }
+    },
+    "extra": {
+      "firebaseApiKey": "demo_key_only_for_reference",
+      "firebaseAuthDomain": "demo.firebaseapp.com",
+      "firebaseProjectId": "demo-project",
+      "firebaseStorageBucket": "demo.appspot.com",
+      "firebaseMessagingSenderId": "123456789",
+      "firebaseAppId": "1:123456789:web:abc123def456",
+      "eas": {
+        "projectId": "a37f1ca0-fd89-420f-b984-8c1c1023976e"
+      }
+    },
+    "plugins": [
+      "expo-web-browser"
+    ]
+  }
+}
