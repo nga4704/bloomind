@@ -42,7 +42,7 @@ export const homeStyles = StyleSheet.create({
     marginLeft: 12,
   },
   dateText: {
-    color: "#7E7E7E",
+    color: "#3a8139",
     fontSize: 12,
     marginTop: 6,
   },

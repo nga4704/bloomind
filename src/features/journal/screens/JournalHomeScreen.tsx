@@ -11,7 +11,7 @@ import { Ionicons, Feather } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import { getJournalsByYear } from "../services/journal.service";
-import { moodData } from "../../mood/utils/moodData";
+import { moodData } from "../../../utils/moodData";
 import { getJournalByDate } from "../services/journal.service";
 import { getMoodByDate } from "../../mood/services/mood.service";
 
@@ -116,8 +116,8 @@ const JournalCard = ({ item, navigation }: any) => {
     loadMood();
   }, [item]);
   const moodItem = moodData.find(
-  (m) => m.id === (mood?.moodId || mood?.id)
-);
+    (m) => m.id === (mood?.moodId || mood?.id)
+  );
 
   const isToday = (() => {
     const today = new Date();
@@ -156,13 +156,23 @@ const JournalCard = ({ item, navigation }: any) => {
         )}
       </View>
 
-      <Text style={styles.cardTitle} numberOfLines={1}>
-        {item.previewTitle || "Không tiêu đề"}
-      </Text>
+      {!!item.previewTitle && (
+        <Text style={styles.cardTitle} numberOfLines={1}>
+          {item.previewTitle}
+        </Text>
+      )}
 
-      <Text style={styles.cardContent} numberOfLines={1}>
-        {item.previewContent || ""}
-      </Text>
+      {!!item.previewContent && (
+        <Text
+          style={[
+            styles.cardContent,
+            !item.previewTitle && { marginTop: 2 },
+          ]}
+          numberOfLines={1}
+        >
+          {item.previewContent}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -171,8 +181,8 @@ const JournalCard = ({ item, navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFCF2",
-    marginTop:20
+    backgroundColor: "#fffbf2",
+    marginTop: 20
   },
 
   /* HEADER */

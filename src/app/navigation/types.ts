@@ -1,7 +1,7 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { MoodLog } from "../../features/recommender/types/mood";
+import { MoodLog } from "../../types/mood";
 
-/* 🔥 Bottom Tabs */
+/* Bottom Tabs */
 export type BottomTabParamList = {
   Home: undefined;
   Analysis: undefined;
@@ -9,7 +9,7 @@ export type BottomTabParamList = {
   Profile: undefined;
 };
 
-/* 🔥 Root Stack */
+/* Root Stack */
 export type RootStackParamList = {
   Splash: undefined;
 
@@ -51,7 +51,9 @@ export type RootStackParamList = {
   JournalEdit: undefined;
 
   // Chat
-  Chatbot: undefined;
+  Chatbot: {
+  conversationId?: string;
+};
   ChatHistory: undefined;
 
   // Recommendation
@@ -71,3 +73,8 @@ export type NoParamRoute = {
     ? K
     : never;
 }[keyof RootStackParamList];
+
+export type HomeActionRoute =
+  | "Journal"
+  | "Analysis"
+  | "Chatbot";

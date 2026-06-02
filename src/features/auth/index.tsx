@@ -1,3 +1,3 @@
-export { LoginScreen } from './screens/Login';
+export { LoginScreen } from './screens/LoginHomeScreen';
 export { EmailLoginScreen } from './screens/EmailLoginScreen';
 export { RegisterScreen } from './screens/RegisterScreen';

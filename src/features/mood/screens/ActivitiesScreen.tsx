@@ -13,7 +13,7 @@ import { Feather } from "@expo/vector-icons";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import AddActivityModal from "../components/AddActivityModal";
 
-import { DETAIL_MOODS } from "../utils/detailMoods";
+import { DETAIL_MOODS } from "../../../utils/detailMoods";
 import { RootStackParamList } from "../../../app/navigation/types";
 import { auth, firestore } from "../../../services/firebase/firebaseConfig";
 
@@ -29,7 +29,7 @@ import {
 import dayjs from "dayjs";
 import { saveOrUpdateMoodLog } from "../services/saveOrUpdateMoodLog";
 import { addActivityToFirebase } from "../services/activityService";
-import { ActivityItem } from "../utils/activities";
+import { ActivityItem } from "../../../utils/activities";
 
 type RouteProps = RouteProp<RootStackParamList, "Activities">;
 
@@ -132,14 +132,16 @@ const ActivitiesScreen = ({ navigation }: any) => {
       date: targetDate ?? dayjs().format("YYYY-MM-DD"),
     });
 
-    Alert.alert(
-      "Thành công",
-      isEditToday
-        ? "Mood hôm nay đã được cập nhật"
-        : "Mood hôm nay đã được lưu"
-    );
+    // Alert.alert(
+    //   "Thành công",
+    //   isEditToday
+    //     ? "Mood hôm nay đã được cập nhật"
+    //     : "Mood hôm nay đã được lưu"
+    // );
 
-    navigation.navigate("MoodTrackingSaved");
+    navigation.navigate("MainTabs", {
+      screen: "Home",
+    });
   };
 
   /* ================= RENDER ================= */

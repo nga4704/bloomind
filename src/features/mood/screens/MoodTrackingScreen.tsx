@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import { useNavigation, useRoute, RouteProp, } from "@react-navigation/native";
-import { moodData, MoodItem } from "../utils/moodData";
+import { moodData, MoodItem } from "../../../utils/moodData";
 import { RootStackParamList } from "../../../app/navigation/types";
 import { auth, firestore } from "../../../services/firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
@@ -51,7 +51,7 @@ export const MoodTrackingScreen = ({ navigation }: any) => {
 
     navigation.navigate("Activities", {
       moodId: selectedMood,
-      mode, // 🔥 truyền mode
+      mode, // truyền mode
     });
   };
 

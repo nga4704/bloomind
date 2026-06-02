@@ -27,7 +27,7 @@ export const EditProfileScreen: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState(user?.displayName || "");
   const [avatar, setAvatar] = useState(user?.photoURL || "");
 
-  // 📸 chọn ảnh
+  // chọn ảnh
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -46,7 +46,7 @@ export const EditProfileScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  // 💾 save profile
+  // save profile
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {

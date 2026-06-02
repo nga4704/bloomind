@@ -27,11 +27,11 @@ export async function getWeekMoodChange(
   average: number;
   stableRate: number;
 }> {
-  // 👉 Thứ 2 của tuần cần lấy
+  // Thứ 2 của tuần cần lấy
   const monday = getMonday(new Date());
   monday.setDate(monday.getDate() - offset * 7);
 
-  // 👉 Danh sách 7 ngày của tuần (LOCAL DATE)
+  // Danh sách 7 ngày của tuần (LOCAL DATE)
   const weekDates: string[] = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
@@ -39,12 +39,12 @@ export async function getWeekMoodChange(
     weekDates.push(formatLocalDate(d));
   }
 
-  // 👉 Lấy toàn bộ moodLogs của user
+  // Lấy toàn bộ moodLogs của user
   const snapshot = await getDocs(
     collection(firestore, "users", uid, "moodLogs")
   );
 
-  // 👉 Map: "2025-12-21" -> moodValue (1..5)
+  // Map: "2025-12-21" -> moodValue (1..5)
   const moodMap = new Map<string, number>();
 
   snapshot.forEach((doc) => {
@@ -58,11 +58,11 @@ export async function getWeekMoodChange(
     }
   });
 
-  // 👉 values theo thứ tự T2 -> CN
+  // values theo thứ tự T2 -> CN
   const values = weekDates.map((date) => moodMap.get(date) ?? 0);
 
   // =====================
-  // 📊 AVERAGE (BỎ QUA NGÀY = 0)
+  // AVERAGE (BỎ QUA NGÀY = 0)
   // =====================
   const validValues = values.filter((v) => v > 0);
   const average =
@@ -73,7 +73,7 @@ export async function getWeekMoodChange(
       : 0;
 
   // =====================
-  // 📈 STABLE RATE
+  // STABLE RATE
   // =====================
   let stableCount = 0;
   let compareCount = 0;

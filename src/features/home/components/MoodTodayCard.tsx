@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 
-import { moodData } from "../../mood/utils/moodData";
+import { moodData } from "../../../utils/moodData";
 
 interface Props {
   todayMood: {

@@ -25,7 +25,7 @@ import { nanoid } from "nanoid/non-secure";
 import { uploadJournalImage } from "../services/image.service";
 import { deleteJournal } from "../services/journal.service";
 import { getMoodByDate } from "../../../features/mood/services/mood.service";
-import { moodData } from "../../mood/utils/moodData";
+import { moodData } from "../../../utils/moodData";
 
 const JournalCreateScreen = () => {
   useBlurOnLeave();
@@ -52,11 +52,20 @@ const JournalCreateScreen = () => {
       const data = await getJournalById(journalId);
       if (!data) return;
 
-      const textBlocks =
-        data.blocks?.filter((b: any) => b.type === "text") || [];
+      const titleBlock = data.blocks?.find(
+        (b: any) =>
+          b.type === "text" &&
+          b.style?.variant === "title"
+      );
 
-      setTitle(textBlocks[0]?.text || "");
-      setContent(textBlocks[1]?.text || "");
+      const bodyBlock = data.blocks?.find(
+        (b: any) =>
+          b.type === "text" &&
+          b.style?.variant === "body"
+      );
+
+      setTitle(titleBlock?.text || "");
+      setContent(bodyBlock?.text || "");
 
       const rawDate = data.date;
       let parsedDate = new Date();
@@ -101,10 +110,10 @@ const JournalCreateScreen = () => {
         },
       ]);
 
-      alert("Đã thêm ảnh ✅");
+      alert("Đã thêm ảnh");
     } catch (e) {
       console.error(e);
-      alert("Upload ảnh thất bại ❌");
+      alert("Upload ảnh thất bại");
     }
   };
 
@@ -144,11 +153,11 @@ const JournalCreateScreen = () => {
         blocks: finalBlocks,
       });
 
-      alert(journalId ? "Đã cập nhật ✅" : "Đã lưu ✅");
+      alert(journalId ? "Đã cập nhật" : "Đã lưu");
       navigation.goBack();
     } catch (error) {
       console.error(error);
-      alert("Lỗi khi lưu ❌");
+      alert("Lỗi khi lưu");
     }
   };
 
@@ -178,8 +187,8 @@ const JournalCreateScreen = () => {
       headerTitle: "",
       headerShadowVisible: false,
       headerStyle: { backgroundColor: "#fffbf2", paddingTop: 20, },
-headerTopInsetEnabled: true,
-    headerStatusBarHeight: 20,
+      headerTopInsetEnabled: true,
+      headerStatusBarHeight: 20,
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -291,7 +300,7 @@ headerTopInsetEnabled: true,
           {blocks.map((b) =>
             b.type === "image" ? (
               <View key={b.id} style={{ marginTop: 10 }}>
-                <Text>🖼 Image</Text>
+                <Text>Image</Text>
               </View>
             ) : null
           )}
@@ -306,12 +315,12 @@ export default JournalCreateScreen;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#FFFCF2",
+    backgroundColor: "#fffbf2",
   },
 
   container: {
     flex: 1,
-    backgroundColor: "#FFFCF2",
+    backgroundColor: "#fffbf2",
   },
 
   body: {
@@ -329,7 +338,7 @@ const styles = StyleSheet.create({
   },
 
   contentBgImage: {
-    opacity: 0.5,
+    opacity: 0.9,
     borderRadius: 16,
   },
   /* ================= HEADER BUTTON ================= */

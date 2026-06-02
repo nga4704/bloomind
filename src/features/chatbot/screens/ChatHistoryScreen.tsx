@@ -69,9 +69,11 @@ const ChatHistoryScreen = () => {
     }
   };
 
-  useEffect(() => {
+  useFocusEffect(
+  useCallback(() => {
     loadConversations();
-  }, [uid]);
+  }, [uid])
+);
 
   useFocusEffect(
     useCallback(() => {
@@ -114,10 +116,9 @@ const ChatHistoryScreen = () => {
           activeOpacity={0.7}
           disabled={isDeleting}
           onPress={() =>
-            navigation.navigate(
-              "Chatbot",
-              { conversationId: item.id } as never
-            )
+            navigation.navigate("Chatbot", {
+              conversationId: item.id,
+            })
           }
         >
           <Image

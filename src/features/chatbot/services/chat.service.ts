@@ -14,10 +14,10 @@ import { firestore } from "../../../services/firebase/firebaseConfig";
 export type ChatRole = "user" | "assistant";
 export type MessageType = "ai" | "system";
 
-export interface ChatMessage {
-  role: ChatRole;
+export type ChatMessage = {
   content: string;
-}
+  role: ChatRole;
+};
 
 // =======================
 // CREATE CONVERSATION
@@ -92,7 +92,7 @@ export async function getRecentMessages(
       "messages"
     ),
     orderBy("createdAt", "desc"),
-    limit(6) // ⚡ giảm latency
+    limit(6) // giảm latency
   );
 
   const snap = await getDocs(q);
@@ -189,10 +189,10 @@ export async function deleteConversation(
       doc(firestore, "users", uid, "conversations", conversationId)
     );
 
-    console.log("✅ Deleted conversation:", conversationId);
+    console.log("Deleted conversation:", conversationId);
 
   } catch (error) {
-    console.log("❌ Delete failed:", error);
+    console.log("Delete failed:", error);
     throw error;
   }
 }

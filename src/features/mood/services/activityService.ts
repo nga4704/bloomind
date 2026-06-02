@@ -1,6 +1,6 @@
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { firestore } from "../../../services/firebase/firebaseConfig";
-import { ActivityItem } from "../utils/activities";
+import { ActivityItem } from "../../../utils/activities";
 
 export const fetchActivities = async (uid: string): Promise<ActivityItem[]> => {
   const ref = collection(firestore, "users", uid, "activities");

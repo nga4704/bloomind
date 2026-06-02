@@ -11,7 +11,7 @@ interface Props {
     average: number;
     stableRate: number;
   };
-  weekStartDate: Date; // 👉 Thứ 2 của tuần đang xem
+  weekStartDate: Date; // Thứ 2 của tuần đang xem
 }
 
 /* ================== HELPERS ================== */

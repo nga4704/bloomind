@@ -24,7 +24,7 @@ export async function getMoodSummary(
   let total = 0;
 
   snap.forEach((doc) => {
-    const docId = doc.id; // 👈 YYYY-MM-DD
+    const docId = doc.id; // YYYY-MM-DD
 
     if (docId < startKey || docId > endKey) return;
 

@@ -11,7 +11,6 @@ import { ChatScreen, ChatHistoryScreen } from "../../features/chatbot";
 import {
   MoodTrackingScreen,
   ActivitiesScreen,
-  MoodTrackingSavedScreen,
 } from "../../features/mood";
 
 import {
@@ -19,7 +18,7 @@ import {
   MoodHistoryScreen,
 } from "../../features/analysis";
 
-import { RecommendationScreen } from "../../features/recommender";
+import { RecommendationScreen } from "../../features/recommendation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -43,11 +42,7 @@ export const MainNavigator = () => {
 
       <Stack.Screen name="MoodTracking" component={MoodTrackingScreen}  options={{ title: "Chọn cảm xúc" }}/>
       <Stack.Screen name="Activities" component={ActivitiesScreen}  options={{ title: "Chọn hoạt động" }}/>
-      <Stack.Screen
-        name="MoodTrackingSaved"
-        component={MoodTrackingSavedScreen}
-        options={{ headerShown: false }}
-      />
+
 
       <Stack.Screen name="Analysis" component={AnalysisScreen}  options={{ title: "Thống kê cảm xúc" }}/>
       <Stack.Screen

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StatusBar, Animated } from 'react-native';
-import { COLORS } from '../../../types/contants/colors';
+import { COLORS } from '../../../contants/colors';
 import useSplashAnimation from '../hooks/useSplashAnimation';
 import ProgressBar from '../components/ProgressBar';
 import { styles } from '../styles/splash';

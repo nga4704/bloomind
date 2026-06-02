@@ -36,28 +36,58 @@ interface Msg {
   sender: "user" | "bot";
 }
 
+type ChatRouteProp = RouteProp<RootStackParamList, "Chatbot">;
+
 const ChatScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const flatListRef = useRef<FlatList>(null);
 
   const uid = auth.currentUser?.uid;
-
-  type ChatRouteProp = RouteProp<RootStackParamList, "Chatbot">;
   const route = useRoute<ChatRouteProp>();
 
   const initialConversationId = route.params?.conversationId ?? null;
 
-  const [conversationId, setConversationId] = useState<string | null>(
-    initialConversationId
-  );
-
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [typing, setTyping] = useState(false);
   const [userProfile, setUserProfile] = useState("");
 
-  /* ================================
+  /* =========================
+     RESET + LOAD CHAT HISTORY
+  ========================= */
+  useEffect(() => {
+    if (!uid) return;
+
+    const load = async () => {
+      setTyping(false);
+      setMessages([]);
+
+      if (!initialConversationId) {
+        setConversationId(null);
+        return;
+      }
+
+      const oldMessages = await getMessagesByConversation(
+        uid,
+        initialConversationId
+      );
+
+      const formatted: Msg[] = oldMessages.map((m, index) => ({
+        id: index.toString(),
+        text: m.content,
+        sender: (m.role === "assistant" ? "bot" : "user") as "user" | "bot",
+      }));
+
+      setMessages(formatted);
+      setConversationId(initialConversationId);
+    };
+
+    load();
+  }, [initialConversationId, uid]);
+
+  /* =========================
      LOAD PROFILE
-  ================================ */
+  ========================= */
   useEffect(() => {
     const loadProfile = async () => {
       if (!uid) return;
@@ -69,50 +99,24 @@ const ChatScreen = () => {
     };
 
     loadProfile();
-  }, []);
+  }, [uid]);
 
-  /* ================================
-     LOAD HISTORY (ONLY ON OPEN)
-  ================================ */
-  useEffect(() => {
-    if (!uid) return;
-    if (!initialConversationId) return;
-
-    const loadMessages = async () => {
-      const oldMessages = await getMessagesByConversation(
-        uid,
-        initialConversationId
-      );
-
-      const formatted: Msg[] = oldMessages.map((m, index) => ({
-        id: index.toString(),
-        text: m.content,
-        sender: m.role === "assistant" ? "bot" : "user",
-      }));
-
-      setMessages(formatted);
-    };
-
-    loadMessages();
-  }, [initialConversationId]);
-
-  /* ================================
+  /* =========================
      AUTO SCROLL
-  ================================ */
+  ========================= */
   useEffect(() => {
     flatListRef.current?.scrollToEnd({ animated: true });
   }, [messages, typing]);
 
-  /* ================================
+  /* =========================
      SEND MESSAGE
-  ================================ */
+  ========================= */
   const onSend = async (text: string) => {
     if (!uid || !text.trim()) return;
 
     const userId = Date.now().toString();
     const botId = (Date.now() + 1).toString();
 
-    // 1. optimistic UI
     setMessages((prev) => [
       ...prev,
       { id: userId, text, sender: "user" },
@@ -124,21 +128,17 @@ const ChatScreen = () => {
     try {
       let convoId = conversationId;
 
-      // 2. create conversation if needed
       if (!convoId) {
         convoId = await createConversation(uid, text);
         setConversationId(convoId);
       }
 
-      // 3. SAVE USER MESSAGE (await FIX)
       await saveMessage(uid, convoId, "user", text, "system");
 
-      // 4. history + mood
       const history = await getRecentMessages(uid, convoId);
       const today = new Date().toISOString().slice(0, 10);
       const mood = await getTodayMood(uid, today);
 
-      // 5. AI call
       const res = await sendMessageToAI(
         text,
         history,
@@ -146,17 +146,14 @@ const ChatScreen = () => {
         userProfile
       );
 
-      // 6. save AI message (await FIX)
       await saveMessage(uid, convoId, "assistant", res.reply, "ai");
 
-      // 7. update UI bot message
       setMessages((prev) =>
         prev.map((m) =>
           m.id === botId ? { ...m, text: res.reply } : m
         )
       );
 
-      // 8. update title (safe)
       const convoRef = doc(
         firestore,
         "users",
@@ -168,16 +165,12 @@ const ChatScreen = () => {
       const snap = await getDoc(convoRef);
       const currentTitle = snap.data()?.title;
 
-      if (
-        res.title &&
-        (!currentTitle || currentTitle.length < 15)
-      ) {
+      if (res.title && (!currentTitle || currentTitle.length < 15)) {
         await updateDoc(convoRef, {
           title: res.title,
         });
       }
 
-      // 9. update profile memory
       if (res.personality) {
         setUserProfile(res.personality);
 
@@ -192,9 +185,9 @@ const ChatScreen = () => {
         prev.map((m) =>
           m.id === botId
             ? {
-              ...m,
-              text: "Mình đang gặp lỗi, thử lại sau nhé 🙏",
-            }
+                ...m,
+                text: "Mình đang gặp lỗi, thử lại sau nhé!",
+              }
             : m
         )
       );
@@ -203,9 +196,9 @@ const ChatScreen = () => {
     }
   };
 
-  /* ================================
+  /* =========================
      UI
-  ================================ */
+  ========================= */
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -260,9 +253,9 @@ const ChatScreen = () => {
 
 export default ChatScreen;
 
-/* ================================
+/* =========================
    STYLE
-================================ */
+========================= */
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fffbf2" },
 

@@ -20,28 +20,13 @@ export const EmailLoginScreen: React.FC<Props> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const { login } = useLogin();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Lỗi', 'Vui lòng nhập đủ email và mật khẩu');
-      return;
-    }
-
-    try {
-      await login(email, password);
-
-      Alert.alert('Thành công', 'Đăng nhập thành công!');
-      // navigation.replace('Home');
-    } catch (err: any) {
-      console.log('LOGIN ERROR:', err);
-
-      if (err.message === 'Account disabled') {
-        Alert.alert('Tài khoản bị khoá', 'Liên hệ admin');
-        return;
-      }
-
-      Alert.alert('Đăng nhập thất bại', err.message);
-    }
-  };
+const handleLogin = async () => {
+  try {
+    await login(email, password);
+  } catch (err: any) {
+    Alert.alert("Đăng nhập thất bại", err.message);
+  }
+};
 
   return (
     <View style={styles.container}>

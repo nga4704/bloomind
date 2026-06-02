@@ -11,8 +11,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { RootStackParamList, NoParamRoute } from "../../../app/navigation/types";
-
 import MoodTodayCard from "../components/MoodTodayCard";
 import { HomeHeader } from "../components/HomeHeader";
 import { HomeActions } from "../components/HomeActions";
@@ -21,10 +19,14 @@ import { useHomeUser } from "../hooks/useHomeUser";
 import { useTodayMood } from "../hooks/useTodayMood";
 
 import { homeStyles as styles } from "../styles/home";
-import { HOME_ASSETS } from "../../../types/contants/homeAssets";
+import { HOME_ASSETS } from "../../../contants/homeAssets";
 
-import { RecommendationAction } from "../../recommender/types/recommendation";
+import { RecommendationAction } from "../../recommendation/types/recommendation";
 import dayjs from "dayjs";
+import {
+  RootStackParamList,
+  HomeActionRoute,
+} from "../../../app/navigation/types";
 
 type NavigationType = NativeStackNavigationProp<RootStackParamList>;
 
@@ -78,9 +80,15 @@ const HomeScreen: React.FC = () => {
     });
   };
 
-  const handleNavigate = (route: NoParamRoute) => {
+  const handleNavigate = (route: HomeActionRoute) => {
+    if (route === "Chatbot") {
+      navigation.navigate("Chatbot", {});
+      return;
+    }
+
     navigation.navigate(route);
   };
+
   const generateWeekData = () => {
     const start = dayjs().startOf("week").add(1, "day"); // T2
 

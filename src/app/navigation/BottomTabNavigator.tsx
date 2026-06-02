@@ -4,8 +4,6 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Text,
-  Animated,
 } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 
@@ -15,10 +13,20 @@ import { AnalysisScreen } from "../../features/analysis";
 import { JournalHomeScreen } from "../../features/journal";
 
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "./types";
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon = ({ name, focused }: { name: any; focused: boolean }) => {
+type RootNav = NativeStackNavigationProp<RootStackParamList>;
+
+const TabIcon = ({
+  name,
+  focused,
+}: {
+  name: any;
+  focused: boolean;
+}) => {
   return (
     <View style={styles.iconWrap}>
       <Ionicons
@@ -31,19 +39,16 @@ const TabIcon = ({ name, focused }: { name: any; focused: boolean }) => {
 };
 
 export const BottomTabNavigator = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<RootNav>();
 
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
-
           tabBarShowLabel: false,
           tabBarLabelStyle: styles.label,
-
           tabBarStyle: styles.tabBar,
-
           tabBarItemStyle: styles.tabItem,
 
           tabBarIcon: ({ focused }) => {
@@ -54,15 +59,28 @@ export const BottomTabNavigator = () => {
             if (route.name === "Journal") iconName = "book";
             if (route.name === "Profile") iconName = "person";
 
-            return <TabIcon name={iconName} focused={focused} />;
+            return (
+              <TabIcon
+                name={iconName}
+                focused={focused}
+              />
+            );
           },
 
           tabBarActiveTintColor: "#6dbe45",
           tabBarInactiveTintColor: "#8E8E93",
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Analysis" component={AnalysisScreen} />
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+        />
+
+        <Tab.Screen
+          name="Analysis"
+          component={AnalysisScreen}
+        />
+
         <Tab.Screen
           name="Empty"
           component={View}
@@ -70,17 +88,31 @@ export const BottomTabNavigator = () => {
             tabBarButton: () => null,
           }}
         />
-        <Tab.Screen name="Journal" component={JournalHomeScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+
+        <Tab.Screen
+          name="Journal"
+          component={JournalHomeScreen}
+        />
+
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+        />
       </Tab.Navigator>
 
-      {/* 🔥 FAB */}
+      {/* FAB */}
       <TouchableOpacity
         activeOpacity={0.85}
         style={styles.fab}
-        onPress={() => navigation.navigate("Chatbot")}
+        onPress={() =>
+          navigation.navigate("Chatbot", {})
+        }
       >
-        <Feather name="message-circle" size={26} color="#fff" />
+        <Feather
+          name="message-circle"
+          size={26}
+          color="#fff"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -96,19 +128,17 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     backgroundColor: "#ffffff",
 
-    // iOS shadow
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 30,
     shadowOffset: { width: 20, height: 0 },
 
-    // Android shadow
     elevation: 10,
 
     paddingBottom: 8,
     paddingTop: 8,
 
-    borderTopWidth: 0, 
+    borderTopWidth: 0,
   },
 
   tabItem: {
@@ -138,6 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
 
     backgroundColor: "#6dbe45",
+
     justifyContent: "center",
     alignItems: "center",
 
@@ -146,6 +177,7 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
 
-    elevation: 12,
+    elevation: 20,
+    zIndex: 9999,
   },
 });

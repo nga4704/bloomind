@@ -39,11 +39,11 @@ export default function YearAnalysisScreen() {
   const [trend, setTrend] = useState<TrendData | null>(null);
   const [moodSummary, setMoodSummary] = useState<MoodSummaryData | null>(null);
 
-  // ✅ MINI YEAR
+  // MINI YEAR
   const [moodByYearMini, setMoodByYearMini] = useState<MoodByDay[][]>([]);
   const [streakYear, setStreakYear] = useState<any>(null);
 
-  // ✅ WEEKDAY BAR CHART
+  // WEEKDAY BAR CHART
   const [moodByYearWeekday, setMoodByYearWeekday] =
     useState<MoodItemInMonth[]>([]);
 
@@ -86,7 +86,7 @@ export default function YearAnalysisScreen() {
 
       <View style={{ height: 16 }} />
 
-      {/* ✅ MINI YEAR CHART */}
+      {/* MINI YEAR CHART */}
       <MoodYearMiniMonths
         year={year}
         moodByYear={moodByYearMini}
@@ -99,7 +99,7 @@ export default function YearAnalysisScreen() {
       {moodSummary && <MoodSummaryCard data={moodSummary} />}
       {trend && <TrendCard trend={trend} />}
 
-      {/* ✅ WEEKDAY BAR */}
+      {/* WEEKDAY BAR */}
       <MoodWeekdayBarChart
         month={0}
         year={year}

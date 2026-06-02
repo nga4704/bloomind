@@ -28,8 +28,6 @@ export const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 
     try {
       await register(email, password);
-
-      Alert.alert('Thành công', 'Tài khoản đã được tạo');
     } catch (err: any) {
       console.log('REGISTER ERROR:', err);
       Alert.alert('Đăng ký thất bại', err.message);

@@ -87,7 +87,7 @@ const MenuItem = ({ icon, label }: any) => (
 );
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#FFFCF2" },
+  safe: { flex: 1, backgroundColor: "#fffbf2" },
   container: { padding: 20 },
 
   header: {
