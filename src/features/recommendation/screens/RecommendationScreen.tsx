@@ -1,73 +1,213 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View, ActivityIndicator, StyleSheet } from "react-native";
-import { generateRecommendations } from "../services/recommendationService";
-import RecommendationCard from "../components/RecommendationCard";
-import { useAuth } from "../../../services/firebase/AuthContext";
-import { toggleDone, fetchRecommendationStatus } from "../services/recommendationStatusService";
+import {
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+} from "react-native";
 
-export default function RecommendationScreen({ route }: any) {
+import { generateRecommendations } from "../services/recommendationService";
+
+import RecommendationCard from "../components/RecommendationCard";
+
+import { useAuth } from "../../../services/firebase/AuthContext";
+
+import {
+  toggleDone,
+  fetchRecommendationStatus,
+} from "../services/recommendationStatusService";
+
+import {
+  calculateAccuracy,
+  calculatePrecisionAtK,
+  calculateRecallAtK,
+  calculateF1Score,
+  calculateEngagementRate,
+} from "../utils/recommendationMetrics";
+
+export default function RecommendationScreen({
+  route,
+}: any) {
   const { user } = useAuth();
+
   const mood = route.params?.todayMood;
 
   const [actions, setActions] = useState<any[]>([]);
   const [doneIds, setDoneIds] = useState<string[]>([]);
 
-  const date = new Date().toISOString().split("T")[0];
+  const date = new Date()
+    .toISOString()
+    .split("T")[0];
+
+  const logMetrics = (
+    recommendationCount: number,
+    completedCount: number
+  ) => {
+    const accuracy = calculateAccuracy(
+      recommendationCount,
+      completedCount
+    );
+
+    const precision = calculatePrecisionAtK(
+      recommendationCount,
+      completedCount
+    );
+
+    const recall = calculateRecallAtK(
+      recommendationCount,
+      completedCount
+    );
+
+    const f1 = calculateF1Score(
+      precision,
+      recall
+    );
+
+    const engagement =
+      calculateEngagementRate(
+        recommendationCount,
+        completedCount
+      );
+
+    console.log(
+      "========== RECOMMENDATION METRICS =========="
+    );
+
+    console.log(
+      "Recommended:",
+      recommendationCount
+    );
+
+    console.log(
+      "Completed:",
+      completedCount
+    );
+
+    console.log(
+      "Accuracy:",
+      accuracy + "%"
+    );
+
+    console.log(
+      "Precision@K:",
+      precision
+    );
+
+    console.log(
+      "Recall@K:",
+      recall
+    );
+
+    console.log(
+      "F1 Score:",
+      f1
+    );
+
+    console.log(
+      "Engagement Rate:",
+      engagement + "%"
+    );
+
+    console.log(
+      "==========================================="
+    );
+  };
 
   useEffect(() => {
     if (!user?.uid || !mood) return;
 
     (async () => {
       try {
-        // 1. load recommendations
-        const recs = await generateRecommendations(user.uid, mood);
-        setActions(recs || []);
-        
+        const recs =
+          await generateRecommendations(
+            user.uid,
+            mood
+          );
 
-        // 2. load done status
-        const status = await fetchRecommendationStatus(user.uid, date);
-        setDoneIds(status.doneActionIds || []);
+        setActions(recs || []);
+
+        const status =
+          await fetchRecommendationStatus(
+            user.uid,
+            date
+          );
+
+        const done =
+          status.doneActionIds || [];
+
+        setDoneIds(done);
+
+        logMetrics(
+          recs.length,
+          done.length
+        );
       } catch (e) {
-        console.log("ERROR:", e);
+        console.log(
+          "Recommendation Error:",
+          e
+        );
+
         setActions([]);
+        setDoneIds([]);
       }
     })();
   }, [user, mood]);
 
-  const handleToggle = async (action: any) => {
+  const handleToggle = async (
+    action: any
+  ) => {
     if (!user?.uid) return;
 
-    await toggleDone(
-      user.uid,
-      date,
-      action.id,
-      action.exp || 0
-    );
+    try {
+      await toggleDone(
+        user.uid,
+        date,
+        action.id,
+        action.exp || 0
+      );
 
-    const refreshed = await fetchRecommendationStatus(user.uid, date);
-    setDoneIds(refreshed.doneActionIds || []);
+      const refreshed =
+        await fetchRecommendationStatus(
+          user.uid,
+          date
+        );
 
-    // refresh local state
-    const updated = doneIds.includes(action.id)
-      ? doneIds.filter(id => id !== action.id)
-      : [...doneIds, action.id];
+      const done =
+        refreshed.doneActionIds || [];
 
-    setDoneIds(updated);
+      setDoneIds(done);
+
+      logMetrics(
+        actions.length,
+        done.length
+      );
+    } catch (error) {
+      console.log(
+        "Toggle recommendation error:",
+        error
+      );
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
       {actions.length === 0 ? (
-        <Text style={{ marginTop: 40, textAlign: "center", color: "#888" }}>
-          Không có gợi ý hôm nay 🌱
-        </Text>
+        <View style={styles.empty}>
+          <Text style={styles.emptyText}>
+            Không có gợi ý hôm nay 🌱
+          </Text>
+        </View>
       ) : (
-        actions.map((a) => (
+        actions.map((action) => (
           <RecommendationCard
-            key={a.id}
-            action={a}
-            done={doneIds.includes(a.id)}
-            onToggle={() => handleToggle(a)}
+            key={action.id}
+            action={action}
+            done={doneIds.includes(
+              action.id
+            )}
+            onToggle={() =>
+              handleToggle(action)
+            }
           />
         ))
       )}
@@ -77,15 +217,9 @@ export default function RecommendationScreen({ route }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    flex: 1,
     backgroundColor: "#FFFBF2",
-  },
-
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 12,
-    color: "#222",
+    padding: 16,
   },
 
   empty: {

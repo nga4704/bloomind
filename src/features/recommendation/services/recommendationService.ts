@@ -32,10 +32,13 @@ export async function generateRecommendations(userId: string, mood: MoodLog) {
 
   const snap = await getDoc(snapshotRef);
 
-  // chỉ reuse nếu data hợp lệ
   if (snap.exists()) {
     const data = snap.data();
-    if (data?.rankedActions?.length > 0) {
+
+    if (
+      data?.rankedActions?.length > 0 &&
+      data?.moodId === normalizedMood.moodId
+    ) {
       return data.rankedActions;
     }
   }

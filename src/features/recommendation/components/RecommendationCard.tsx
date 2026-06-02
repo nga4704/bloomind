@@ -25,6 +25,24 @@ function getIcon(action: RecommendationAction) {
     case "walk":
       return "walk-outline";
 
+    case "journal_reflection":
+      return "create-outline";
+
+    case "music_relax":
+      return "musical-notes-outline";
+
+    case "gratitude":
+      return "flower-outline";
+
+    case "celebrate":
+      return "trophy-outline";
+
+    case "exercise":
+      return "barbell-outline";
+
+    case "stretching":
+      return "body-outline";
+
     default:
       return "sparkles-outline";
   }
